@@ -148,6 +148,30 @@ public final class Spinner extends AndroidViewComponent implements OnItemSelecte
     }
   }
 
+    /**
+     * Returns true if the Spinner is active and clickable.
+     *
+     * @return  {@code true} indicates enabled, {@code false} disabled
+     */
+    @SimpleProperty(
+            category = PropertyCategory.BEHAVIOR,
+            description = "If set, user can tap Spinner to choose item.")
+    public boolean Enabled() {
+        return view.isEnabled();
+    }
+
+    /**
+     * Specifies whether the Spinner should be active and clickable.
+     *
+     * @param enabled  {@code true} for enabled, {@code false} disabled
+     */
+    @DesignerProperty(editorType = PropertyTypeConstants.PROPERTY_TYPE_BOOLEAN,
+            defaultValue = "True")
+    @SimpleProperty
+    public void Enabled(boolean enabled) {
+        view.setEnabled(enabled);
+    }
+
   /**
    * Prompt property getter method
    */
