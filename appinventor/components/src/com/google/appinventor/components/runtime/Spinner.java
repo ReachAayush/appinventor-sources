@@ -43,9 +43,21 @@ public final class Spinner extends AndroidViewComponent implements OnItemSelecte
   private int selectionIndex;
   private boolean isInitialized=false;
 
+  // Backing for text alignment
+  private int textAlignment;
+
+  // Backing for background color
+  private int backgroundColor;
+
+
   public Spinner(ComponentContainer container) {
     super(container);
     view = new android.widget.Spinner(container.$context());
+
+    //default property values
+    TextAlignment(Component.ALIGNMENT_CENTER);
+    Enabled(true);
+    BackgroundColor(Component.COLOR_DEFAULT);
 
     // set regular and dropdown layouts
     adapter = new ArrayAdapter<String>(container.$context(), android.R.layout.simple_spinner_item);
@@ -61,7 +73,72 @@ public final class Spinner extends AndroidViewComponent implements OnItemSelecte
     return view;
   }
 
-  /**
+    /**
+     * Returns the alignment of the button's text: center, normal
+     * (e.g., left-justified if text is written left to right), or
+     * opposite (e.g., right-justified if text is written left to right).
+     *
+     * @return  one of {@link Component#ALIGNMENT_NORMAL},
+     *          {@link Component#ALIGNMENT_CENTER} or
+     *          {@link Component#ALIGNMENT_OPPOSITE}
+     */
+    @SimpleProperty(
+            category = PropertyCategory.APPEARANCE,
+            description = "Left, center, or right.",
+            userVisible = false)
+    public int TextAlignment() {
+        return textAlignment;
+    }
+
+    /**
+     * Specifies the alignment of the button's text: center, normal
+     * (e.g., left-justified if text is written left to right), or
+     * opposite (e.g., right-justified if text is written left to right).
+     *
+     * @param alignment  one of {@link Component#ALIGNMENT_NORMAL},
+     *                   {@link Component#ALIGNMENT_CENTER} or
+     *                   {@link Component#ALIGNMENT_OPPOSITE}
+     */
+    @DesignerProperty(editorType = PropertyTypeConstants.PROPERTY_TYPE_TEXTALIGNMENT,
+            defaultValue = Component.ALIGNMENT_CENTER + "")
+    @SimpleProperty(userVisible = false)
+    public void TextAlignment(int alignment) {
+        this.textAlignment = alignment;
+        view.setTextAlignment(alignment);
+    }
+
+    /**
+     * Returns the button's background color as an alpha-red-green-blue
+     * integer.
+     *
+     * @return  background RGB color with alpha
+     */
+    @SimpleProperty(
+            category = PropertyCategory.APPEARANCE,
+            description = "Returns the button's background color")
+    public int BackgroundColor() {
+        return backgroundColor;
+    }
+
+    /**
+     * Specifies the button's background color as an alpha-red-green-blue
+     * integer.  If the parameter is {@link Component#COLOR_DEFAULT}, the
+     * original beveling is restored.  If an Image has been set, the color
+     * change will not be visible until the Image is removed.
+     *
+     * @param argb background RGB color with alpha
+     */
+    @DesignerProperty(editorType = PropertyTypeConstants.PROPERTY_TYPE_COLOR,
+            defaultValue = Component.DEFAULT_VALUE_COLOR_DEFAULT)
+    @SimpleProperty(description = "Specifies the button's background color. " +
+            "The background color will not be visible if an Image is being displayed.")
+    public void BackgroundColor(int argb) {
+        backgroundColor = argb;
+        updateAppearance();
+    }
+
+
+    /**
    * Selection property getter method.
    */
   @SimpleProperty(description = "Returns the current selected item in the spinner ",
@@ -222,5 +299,9 @@ public final class Spinner extends AndroidViewComponent implements OnItemSelecte
   public void onNothingSelected(AdapterView<?> parent){
     view.setSelection(0);
   }
+
+    public void updateAppearance(){
+        view.setBackgroundColor(backgroundColor);
+    }
 
 }
